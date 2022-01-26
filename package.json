@@ -1,0 +1,19 @@
+{
+  "name": "labelbox",
+  "version": "1.0.0",
+  "description": "Labelbox + Speak_ API Project",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BLuciano/Labelbox-Api.git"
+  },
+  "author": "Luciano",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BLuciano/Labelbox-Api/issues"
+  },
+  "homepage": "https://github.com/BLuciano/Labelbox-Api#readme"
+}
