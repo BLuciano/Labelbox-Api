@@ -2,3 +2,4 @@
 /build
 npm-debug.log
 /data/keys.js
+/app/data/config.js
