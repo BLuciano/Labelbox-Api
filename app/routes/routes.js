@@ -95,13 +95,13 @@ const router = app => {
       response.send("Error: rating must be between 0 and 5");
     }
 
-    let userRatings  = pool.query(`SELECT ratings FROM users WHERE id = ${userId}`, (error, result) => {
+    let userRatings = pool.query(`SELECT ratings FROM users WHERE id = ${userId}`, (error, result) => {
         if(error){throw error;}
         let tmp = JSON.parse(result[0].ratings);
         if(tmp === null){
-          return [{'imgId' : imgId, 'stars' : stars }];
+          return [{"imgId" : imgId, "stars" : stars }];
         } else {
-          return tmp.push({'imgId' : imgId, 'stars' : stars });
+          return tmp.push({"imgId" : imgId, "stars" : stars });
         }
     });
 
@@ -122,7 +122,7 @@ const router = app => {
       response.send("Error: rating must be between 0 and 5");
     }
 
-    let userRatings = pool.query(`SELECT ratings FROM users WHERE id = ${userId}`, (error, result) => {
+    let userRatings = pool.query(`SELECT JSON_EXTRACT(ratings, '$.ratings') as rating FROM users WHERE id = ${userId}`, (error, result) => {
         if(error){throw error;}
         let tmp = JSON.parse(result[0].ratings);
         for(x = 0; x < tmp.length; x++){
@@ -133,6 +133,8 @@ const router = app => {
         }
         return tmp;
     });
+
+    response.send(userRatings);
 
     if(updated){
       pool.query("UPDATE users SET ratings = ? WHERE ID = ?", userRatings, userId, (error, result) => {
@@ -176,6 +178,7 @@ const router = app => {
   const pool = require('../data/config');
   const keys = require('../data/keys');
   const request = require("request");
+  //const {parse, stringify, toJSON, fromJSON} = require('flatted');
 }
 
 module.exports = router;
