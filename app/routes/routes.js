@@ -1,8 +1,36 @@
 const router = app => {
-  //let async = require("async");
-
+  //Home
   app.get("/", (request, response) => {
     response.send({message: "Labelbox REST API"});
+  });
+
+  //Add image to database
+  app.get('/NASAPI', async(req, res) => {
+      let url = `https://api.nasa.gov/planetary/apod?api_key=${keys.keys.NASA}`;
+
+      await request(url, (error, response, body) =>{
+        if(error){
+          res.send(`${error}: Error retrieving NASA API information`);
+        }
+        if(response.statusCode == 200){
+          body = JSON.parse(body);
+          let date = body["date"];
+          let url = body["url"];
+          let query1 = `INSERT INTO images (day, url) SELECT "${date}", "${url}" FROM DUAL WHERE NOT EXISTS (SELECT * FROM images WHERE day="${date}" LIMIT 1)`;
+
+          // Add image to database if not already added
+          pool.query(query1, (error, result) => {
+            if(error){throw error;}
+            if(result.affectedRows > 0){
+              res.send("New image added.");
+            } else {
+              res.send("Sorry, image already uploaded to database.")
+            }
+          });
+        } else {
+          res.send(response.statusCode);
+        }
+      });
   });
 
   //Display all images in database
@@ -146,6 +174,8 @@ const router = app => {
   });
 
   const pool = require('../data/config');
+  const keys = require('../data/keys');
+  const request = require("request");
 }
 
 module.exports = router;
